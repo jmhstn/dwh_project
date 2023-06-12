@@ -1,0 +1,68 @@
+- process_name: lsat_session_song_user_listen
+  process_type: LSAT
+  custom_query: |
+    select event_time as actual_dtm,
+           session_id,
+           song_id,
+           user_id,
+           at_time_sec,
+           case when event_type = 'SongPlayEvent' and at_time_sec = 0
+                then 'Start'
+                when event_type = 'SongPlayEvent' and at_time_sec != 0
+                then 'Restart'
+                when event_type = 'SongStopEvent' and finished is false
+                then 'Pause'
+                else 'Complete'
+           end as action_type
+    from stage.kafka_playback
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_playback
+    key: session_id, song_id, user_id
+    fields: at_time_sec, event_type
+  target:
+    schema: dv
+    table: lsat_session_song_user_listen
+    key: session_song_user_listen_id
+    fields: actual_dtm, at_time_sec, action_type
+
+- process_name: lsat_session_song_user_like
+  process_type: LSAT
+  custom_query: |
+    select event_time as actual_dtm,
+           session_id,
+           song_id,
+           user_id
+    from stage.kafka_song_like
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_playback
+    key: session_id, song_id, user_id
+    fields: 
+  target:
+    schema: dv
+    table: lsat_session_song_user_like
+    key: session_song_user_like_id
+    fields: actual_dtm
+
+- process_name: lsat_session_artist_user_follow
+  process_type: LSAT
+  custom_query: |
+    select event_time as actual_dtm,
+           session_id,
+           artist_id,
+           user_id
+    from stage.kafka_artist_follow
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_artist_follow
+    key: session_id, artist_id, user_id
+    fields: 
+  target:
+    schema: dv
+    table: lsat_session_artist_user_follow
+    key: session_artist_user_follow_id
+    fields: actual_dtm

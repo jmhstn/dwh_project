@@ -1,0 +1,76 @@
+---
+- process_name: hub_user
+  process_type: HUB
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_user_history
+    key: user_id
+    fields:
+  target:
+    schema: dv
+    table: hub_user
+    fields: original_id
+    key: user_id
+
+- process_name: hub_artist
+  process_type: HUB
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_artist
+    key: id
+    fields:
+  target:
+    schema: dv
+    table: hub_artist
+    fields: original_id
+    key: artist_id
+
+- process_name: hub_song
+  process_type: HUB
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_song
+    key: id
+    fields:
+  target:
+    schema: dv
+    table: hub_song
+    fields: original_id
+    key: song_id
+
+- process_name: hub_session
+  process_type: HUB
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_user_authorization
+    key: session_id
+    fields:
+  target:
+    schema: dv
+    table: hub_session
+    fields: original_id
+    key: session_id
+
+- process_name: hub_collection
+  process_type: HUB
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_collection
+    key: id
+    fields:
+  target:
+    schema: dv
+    table: hub_collection
+    fields: original_id
+    key: collection_id
+           

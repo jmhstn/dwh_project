@@ -1,0 +1,130 @@
+- process_name: sat_user
+  process_type: SAT
+  custom_query: |
+    select user_id,
+          event_time as actual_dtm,
+          email,
+          birth_date as birth_dt,
+          first_name,
+          last_name,
+          event_time as registration_dtm,
+          country_code
+              
+    from stage.kafka_user_history
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_user_history
+    key: user_id
+    fields: event_time, email, birth_date, first_name, last_name, event_time, country_code
+  target:
+    schema: dv
+    table: sat_user
+    key: user_id
+    fields: actual_dtm, email, birth_dt, first_name, last_name, registration_dtm, country_code
+
+- process_name: sat_user_subscription
+  process_type: SAT
+  custom_query: |
+    select user_id,
+          event_time as actual_dtm,
+          true as is_premium
+              
+    from stage.kafka_user_subscription
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_user_subscription
+    key: user_id
+    fields: event_time
+  target:
+    schema: dv
+    table: sat_user_subscription
+    key: user_id
+    fields: actual_dtm, is_premium
+
+- process_name: sat_song
+  process_type: SAT
+  custom_query: |
+    select id as song_id,
+          event_time as actual_dtm,
+          name,
+          duration_sec,
+          genre_id as original_genre_id
+       
+    from stage.kafka_song
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_song
+    key: id
+    fields: event_time, name, duration_sec, genre_id
+  target:
+    schema: dv
+    table: sat_song
+    key: song_id
+    fields: actual_dtm, name, duration_sec, original_genre_id
+
+- process_name: sat_collection
+  process_type: SAT
+  custom_query: |
+    select id as collection_id,
+          event_time as actual_dtm,
+          name,
+          collection_type,
+          genre_id as original_genre_id,
+          released_dt as release_dt
+       
+    from stage.kafka_collection
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_collection
+    key: id
+    fields: event_time, name, collection_type, genre_id, released_dt
+  target:
+    schema: dv
+    table: sat_collection
+    key: collection_id
+    fields: actual_dtm, name, collection_type, original_genre_id, release_dt
+
+- process_name: sat_session
+  process_type: SAT
+  custom_query: |
+    select session_id,
+          event_time as actual_dtm
+       
+    from stage.kafka_user_authorization
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_user_authorization
+    key: session_id
+    fields: event_time
+  target:
+    schema: dv
+    table: sat_session
+    key: session_id
+    fields: actual_dtm
+
+- process_name: sat_artist
+  process_type: SAT
+  custom_query: |
+    select id as artist_id,
+          event_time as actual_dtm,
+          name,
+          country_code,
+          founded_year
+       
+    from stage.kafka_artist
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_artist
+    key: id
+    fields: event_time, name, country_code, founded_year
+  target:
+    schema: dv
+    table: sat_artist
+    key: artist_id
+    fields: actual_dtm, name, country_code, founded_year

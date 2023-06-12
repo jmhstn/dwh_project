@@ -1,0 +1,30 @@
+# Creating artists and music
+
+## Genre and genre
+
+- We should probably generate this at the same time, to imitate local scenes
+- Each genre can have origin country, and a band from some country is more likely to pick the genre from this country.
+- Countries with high number of artists are more likely to generate new artists?
+
+
+# Creating new collections
+
+- Each artist releases something based on:
+    - random
+    - some interval
+    - artists's founded year
+    - release history
+    - *genre? country?
+
+- More likely to release a single, then EP, then LP
+    - perhaps different genres has different 
+    - or some behaviours, like "3 singles 1 LP", etc.
+        - each behaviour takes a certain amount of time with random and noise
+
+So we activate an artist randomly, more likely the ones that recorded something recently, some old ones less likely.
+
+# Creating new genres
+
+- Randomly, very tiny chance when the artist is releasing something
+- Most likely it's derived from something old
+    - also maybe something new? just random?

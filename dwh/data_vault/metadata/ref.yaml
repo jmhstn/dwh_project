@@ -1,0 +1,38 @@
+---
+- process_name: ref_country_subscription_cost
+  process_type: REF
+  custom_query: 
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_country_enabled
+    key: country_code
+    fields: event_time
+  target:
+    schema: dv
+    table: ref_country_subscription_cost
+    fields: enabled_dt, subscription_type, subscription_cost, royalty
+    key: country_code
+
+- process_name: ref_genre
+  process_type: REF
+  custom_query: |
+    select id as original_genre_id,
+           name as genre_name,
+           event_time as creation_dtm,
+           country_code,
+           happiness_index,
+           mean_duration_sec as average_duration_sec,
+           'kafka' as source
+    from stage.kafka_genre
+  source:
+    name: kafka
+    schema: stage
+    table: kafka_genre
+    key: 
+    fields: 
+  target:
+    schema: dv
+    table: ref_genre
+    fields: original_genre_id, genre_name, creation_dtm, country_code, happiness_index, average_duration_sec, source
+    key: 
